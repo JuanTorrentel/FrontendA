@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" width="200" height="48">
+  <!-- V: dos segmentos al estilo Vantage (teal + naranja en blanco) -->
+  <path fill="#FFFFFF" d="M0 48 L24 0 L32 0 L16 35 L0 48 Z"/>
+  <path fill="#EEEEEE" d="M24 0 L48 48 L40 48 L32 20 L24 0 Z"/>
+  <text fill="#FFFFFF" x="54" y="32" font-family="Arial, sans-serif" font-size="24" font-weight="500">vantage</text>
+</svg>
