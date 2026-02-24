@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar cita - Yotago School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body class="app-page">
+    <header class="header">
+        <div class="container">
+            <div class="header-content app-header-authed">
+                <a href="index.html" class="logo-link">
+                    <img src="assets/logo-ytg.png" alt="Yotago School" class="logo-img" width="168" height="56">
+                    <span class="logo-name">Yotago School</span>
+                </a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Inicio</a>
+                    <a href="#agendar" class="nav-link">Agendar</a>
+                    <a href="#mis-citas" class="nav-link">Mis citas</a>
+                    <a href="https://api.whatsapp.com/send/?phone=573223764397&text=Hola%2C%20tengo%20una%20consulta" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">Contactar WhatsApp</a>
+                    <button type="button" id="btnLogout" class="btn btn-ghost">Cerrar sesión</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main app-agenda-main">
+        <div class="container app-agenda-container">
+            <!-- ========== SECCIÓN AGENDAMIENTO (Calendly-style) ========== -->
+            <section id="agendar" class="scheduler-section">
+                <h1 class="scheduler-title">Selecciona fecha y hora</h1>
+                <p class="scheduler-subtitle">Citas virtuales de 15 minutos según disponibilidad. Solo puedes tener una cita activa.</p>
+                <div id="citaActivaBanner" class="cita-activa-banner" style="display: none;">
+                    Ya tienes una cita programada. Cancélala o reprográmala desde "Mis citas" para agendar otra.
+                </div>
+
+                <div class="scheduler-layout">
+                    <!-- Columna izquierda: Calendario + Timezone -->
+                    <div class="scheduler-col scheduler-col-left">
+                        <div class="calendar-month">
+                            <div class="calendar-nav">
+                                <button type="button" class="calendar-nav-btn" id="calendarPrev" aria-label="Mes anterior">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                                </button>
+                                <span class="calendar-month-label" id="calendarMonthLabel">Febrero 2025</span>
+                                <button type="button" class="calendar-nav-btn" id="calendarNext" aria-label="Mes siguiente">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                                </button>
+                            </div>
+                            <div class="calendar-weekdays">
+                                <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+                            </div>
+                            <div class="calendar-days" id="calendarDays"></div>
+                        </div>
+
+                        <div class="timezone-selector">
+                            <label for="timezone" class="form-label">Zona horaria</label>
+                            <select id="timezone" class="form-input timezone-select">
+                                <option value="America/Lima">Peru Time (PET)</option>
+                                <option value="America/Bogota">Colombia Time (COT)</option>
+                                <option value="America/Mexico_City">Mexico City (CST)</option>
+                                <option value="America/Argentina/Buenos_Aires">Argentina (ART)</option>
+                                <option value="America/Santiago">Chile (CLT)</option>
+                                <option value="America/New_York">Eastern (EST)</option>
+                                <option value="Europe/Madrid">España (CET)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Columna derecha: Fecha seleccionada + Slots -->
+                    <div class="scheduler-col scheduler-col-right">
+                        <div id="slotHeader" class="slot-header">
+                            <p class="slot-header-hint" id="slotHeaderHint">Selecciona una fecha para ver horarios</p>
+                            <h3 class="slot-header-date" id="slotHeaderDate" style="display: none;"></h3>
+                        </div>
+
+                        <div class="slots-scroll" id="slotsContainer">
+                            <div id="slotsList" class="slots-list"></div>
+                            <p id="slotsEmpty" class="slots-empty" style="display: none;">No hay disponibilidad para esta fecha.</p>
+                            <p id="slotsSelectDate" class="slots-empty slots-hint">Selecciona una fecha en el calendario</p>
+                        </div>
+
+                        <!-- Resumen (aparece al seleccionar slot) -->
+                        <div id="appointmentSummary" class="appointment-summary" style="display: none;">
+                            <h4 class="summary-title">Resumen de la cita</h4>
+                            <div class="summary-details" id="summaryDetails"></div>
+                            <div class="summary-actions">
+                                <button type="button" id="btnConfirmarCita" class="btn btn-primary btn-large btn-block">Confirmar cita</button>
+                                <button type="button" id="btnCancelarSlot" class="btn btn-ghost btn-block">Elegir otro horario</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== MIS CITAS ========== -->
+            <section id="mis-citas" class="mis-citas-section">
+                <h2 class="section-title section-title-left">Mis citas</h2>
+                <div id="citasList" class="citas-list"></div>
+                <div id="emptyCitas" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">📅</div>
+                    <p class="empty-state-title">No tienes citas agendadas</p>
+                    <p>Usa el calendario de arriba para agendar una cita virtual de 15 minutos.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <a href="https://api.whatsapp.com/send/?phone=573223764397&text=Hola%2C%20quiero%20agendar%20una%20cita" target="_blank" rel="noopener noreferrer" class="whatsapp-sticky" aria-label="Contactar por WhatsApp">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.375a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <script src="auth.js"></script>
+    <script src="citas.js"></script>
+    <script src="app.js"></script>
+    <script src="agenda-calendar.js"></script>
+</body>
+</html>

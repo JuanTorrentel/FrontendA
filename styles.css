@@ -320,6 +320,15 @@ body > * {
     width: 100%;
 }
 
+.nav-cta {
+    color: var(--color-primary) !important;
+    font-weight: 600;
+}
+
+.nav-cta:hover {
+    color: var(--color-primary-hover) !important;
+}
+
 .header-ctas {
     display: flex;
     gap: var(--spacing-sm);
@@ -1100,7 +1109,12 @@ body > * {
 
 .testimonials-header {
     text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.trustpilot-widget {
     margin-bottom: var(--spacing-xl);
+    min-height: 52px;
 }
 
 .trustpilot-badge {
@@ -1178,14 +1192,21 @@ body > * {
 .testimonial-avatar {
     width: 48px;
     height: 48px;
+    border-radius: 50%;
     background-color: var(--color-primary-active);
     color: var(--color-text);
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 1.125rem;
+}
+
+.testimonial-avatar-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .testimonial-name {
@@ -1357,6 +1378,137 @@ body > * {
     border-radius: var(--radius-lg);
     padding: var(--spacing-xl);
     box-shadow: var(--shadow-sm);
+}
+
+.register-login-link {
+    max-width: 600px;
+    margin: var(--spacing-md) auto 0;
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+.register-login-link a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-login-link a:hover {
+    color: var(--color-primary-hover);
+    text-decoration: underline;
+}
+
+/* ----- Agenda info card (sección informativa) ----- */
+.agenda-info-card {
+    max-width: 560px;
+    margin: 0 auto;
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+}
+
+.agenda-info-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-md);
+}
+
+.agenda-info-text {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+}
+
+.agenda-info-list {
+    list-style: none;
+    margin-bottom: var(--spacing-lg);
+}
+
+.agenda-info-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+    font-size: 0.9375rem;
+    color: var(--color-text);
+}
+
+.agenda-info-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 6px;
+    height: 6px;
+    background: var(--color-primary);
+    border-radius: 50%;
+}
+
+.agenda-info-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.agenda-info-ctas .btn {
+    flex: 1;
+    min-width: 140px;
+}
+
+.agenda-info-ctas-single {
+    justify-content: center;
+}
+
+.agenda-info-ctas-single .btn {
+    flex: 0 0 auto;
+}
+
+.agenda-info-register {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-lg);
+}
+
+.agenda-info-register a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.agenda-info-register a:hover {
+    color: var(--color-primary-hover);
+    text-decoration: underline;
+}
+
+.agenda-info-disclaimer {
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-border);
+}
+
+.agenda-info-disclaimer .disclaimer-text {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+    .agenda-info-card {
+        padding: var(--spacing-lg);
+    }
+
+    .agenda-info-ctas {
+        flex-direction: column;
+    }
+
+    .agenda-info-ctas .btn {
+        width: 100%;
+    }
 }
 
 .form-group {

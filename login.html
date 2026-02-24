@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión - Yotago School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body class="app-page">
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo-link">
+                    <img src="assets/logo-ytg.png" alt="Yotago School" class="logo-img" width="168" height="56">
+                    <span class="logo-name">Yotago School</span>
+                </a>
+                <a href="index.html" class="nav-link">Volver al inicio</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <div class="login-container">
+            <div class="login-card">
+                <h1 class="login-title">Iniciar sesión</h1>
+                <p class="login-subtitle">Accede a tu cuenta para agendar citas o administrar</p>
+
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Correo</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="tu@email.com" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" autocomplete="current-password" required>
+                    </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" id="remember" name="remember" class="form-checkbox">
+                        <label for="remember" class="form-check-label">Recordar sesión</label>
+                    </div>
+                    <div id="loginError" class="form-error" role="alert" aria-live="polite"></div>
+                    <button type="submit" class="btn btn-primary btn-large btn-block">Iniciar sesión</button>
+                </form>
+
+                <p class="register-login-link" style="margin-top: 1.5rem; text-align: center;">
+                    ¿No tienes cuenta? <a href="register.html">Regístrate</a>
+                </p>
+
+                <div class="login-demo">
+                    <p class="login-demo-title">Credenciales demo</p>
+                    <div class="login-demo-cards">
+                        <div class="login-demo-card">
+                            <span class="login-demo-rol">Admin</span>
+                            <code>admin@demo.com</code>
+                            <code>123456</code>
+                        </div>
+                        <div class="login-demo-card">
+                            <span class="login-demo-rol">Usuario</span>
+                            <code>user@demo.com</code>
+                            <code>123456</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+    <script>
+        (function() {
+            const result = checkAuth('login');
+            if (!result.allowed && result.redirect) {
+                window.location.href = result.redirect;
+                return;
+            }
+
+            const form = document.getElementById('loginForm');
+            const errorEl = document.getElementById('loginError');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                errorEl.textContent = '';
+
+                const email = form.email.value;
+                const password = form.password.value;
+
+                const res = login(email, password);
+
+                if (res.success) {
+                    window.location.href = res.usuario.rol === 'admin' ? 'admin.html' : 'agenda.html';
+                } else {
+                    errorEl.textContent = res.error;
+                    errorEl.classList.add('visible');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

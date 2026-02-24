@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar cuenta - Yotago School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body class="app-page">
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo-link">
+                    <img src="assets/logo-ytg.png" alt="Yotago School" class="logo-img" width="168" height="56">
+                    <span class="logo-name">Yotago School</span>
+                </a>
+                <a href="login.html" class="nav-link">Iniciar sesión</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <div class="login-container">
+            <div class="login-card" id="verifyCard">
+                <div id="verifyLoading">
+                    <p class="login-subtitle">Verificando tu cuenta...</p>
+                </div>
+                <div id="verifySuccess" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <span style="font-size: 3rem;">✓</span>
+                    </div>
+                    <h1 class="login-title">¡Cuenta verificada!</h1>
+                    <p class="login-subtitle">Tu cuenta ha sido verificada correctamente. Ya puedes iniciar sesión.</p>
+                    <a href="login.html" class="btn btn-primary btn-large btn-block" style="margin-top: 1.5rem;">Iniciar sesión</a>
+                </div>
+                <div id="verifyError" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <span style="font-size: 3rem;">⚠</span>
+                    </div>
+                    <h1 class="login-title">Error de verificación</h1>
+                    <p class="login-subtitle" id="verifyErrorMessage"></p>
+                    <a href="index.html#registro" class="btn btn-primary btn-large btn-block" style="margin-top: 1.5rem;">Volver al registro</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+    <script>
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
+
+            const loading = document.getElementById('verifyLoading');
+            const success = document.getElementById('verifySuccess');
+            const error = document.getElementById('verifyError');
+            const errorMsg = document.getElementById('verifyErrorMessage');
+
+            if (!token) {
+                loading.style.display = 'none';
+                error.style.display = 'block';
+                errorMsg.textContent = 'No se proporcionó un token de verificación. Revisa el enlace que te enviamos por correo.';
+                return;
+            }
+
+            const res = verifyToken(token);
+            loading.style.display = 'none';
+
+            if (res.success) {
+                success.style.display = 'block';
+                if (typeof showToast === 'function') {
+                    showToast('¡Cuenta verificada correctamente!', 'success');
+                }
+            } else {
+                error.style.display = 'block';
+                errorMsg.textContent = res.error || 'Token inválido o expirado.';
+            }
+        })();
+    </script>
+</body>
+</html>

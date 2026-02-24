@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de administración - Yotago School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body class="app-page">
+    <header class="header">
+        <div class="container">
+            <div class="header-content app-header-authed">
+                <a href="index.html" class="logo-link">
+                    <img src="assets/logo-ytg.png" alt="Yotago School" class="logo-img" width="168" height="56">
+                    <span class="logo-name">Yotago School</span>
+                </a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Inicio</a>
+                    <a href="admin.html" class="nav-link">Admin</a>
+                    <button type="button" id="btnLogout" class="btn btn-ghost">Cerrar sesión</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main" style="align-items: flex-start; padding-top: var(--spacing-xl);">
+        <div class="container" style="max-width: 1100px;">
+            <h1 class="app-page-title">Panel de administración de citas</h1>
+
+            <section class="admin-availability-section">
+                <h2 class="admin-section-title">Horarios de disponibilidad</h2>
+                <p class="admin-section-desc">Configura rangos de horas por día de la semana (Lunes a Domingo). Los usuarios solo verán slots dentro de estos horarios.</p>
+                <div id="scheduleEditor" class="schedule-editor"></div>
+                <button type="button" id="btnGuardarHorario" class="btn btn-primary">Guardar horario</button>
+            </section>
+
+            <div class="admin-metrics">
+                <div class="metric-card">
+                    <div class="metric-card-value" id="metricTotal">0</div>
+                    <div class="metric-card-label">Total citas</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value" id="metricPendientes">0</div>
+                    <div class="metric-card-label">Pendientes</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value" id="metricConfirmadas">0</div>
+                    <div class="metric-card-label">Confirmadas</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value" id="metricCanceladas">0</div>
+                    <div class="metric-card-label">Canceladas</div>
+                </div>
+                <div class="metric-card metric-card-highlight" id="metricOcupacionWrap" style="display: none;">
+                    <div class="metric-card-value" id="metricOcupacion">0/0</div>
+                    <div class="metric-card-label">Ocupación del día</div>
+                </div>
+            </div>
+
+            <div class="admin-view-toggle">
+                <button type="button" class="btn btn-sm" id="btnViewTable" data-view="table">Vista Tabla</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="btnViewAgenda" data-view="agenda">Vista Agenda día</button>
+            </div>
+
+            <div id="adminAgendaSection" class="admin-agenda-day" style="display: none;">
+                <div class="agenda-day-controls">
+                    <input type="date" id="agendaDayFecha" class="form-input" style="max-width: 160px;">
+                    <button type="button" id="btnCargarAgenda" class="btn btn-primary btn-sm">Cargar día</button>
+                </div>
+                <div id="agendaOcupacion" class="agenda-ocupacion-bar"></div>
+                <div id="agendaTimeline" class="agenda-timeline"></div>
+            </div>
+
+            <div id="adminTableSection">
+                <div class="admin-filters">
+                    <input type="text" id="searchInput" class="form-input" placeholder="Buscar por nombre, email, WhatsApp...">
+                    <select id="filterEstado" class="form-input">
+                        <option value="">Todos los estados</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Confirmada">Confirmada</option>
+                        <option value="Reprogramada">Reprogramada</option>
+                        <option value="Cancelada">Cancelada</option>
+                    </select>
+                    <select id="filterServicio" class="form-input">
+                        <option value="">Todos los servicios</option>
+                        <option value="Curso">Curso</option>
+                        <option value="Mentoría">Mentoría</option>
+                        <option value="Copytrading">Copytrading</option>
+                    </select>
+                    <input type="date" id="filterFecha" class="form-input" placeholder="Fecha">
+                    <button type="button" id="btnClearFilters" class="btn btn-ghost">Limpiar</button>
+                </div>
+                <div id="adminTableWrap" class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Contacto</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody"></tbody>
+                </table>
+                </div>
+            </div>
+
+            <div id="adminCards" class="admin-cards"></div>
+
+            <div id="emptyAdmin" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">📅</div>
+                <p class="empty-state-title">No hay citas</p>
+                <p>Las citas creadas por los usuarios aparecerán aquí.</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="auth.js"></script>
+    <script src="citas.js"></script>
+    <script src="app.js"></script>
+    <script>
+        (function() {
+            const result = checkAuth('admin');
+            if (!result.allowed) {
+                if (result.msg) showToast(result.msg, 'error');
+                window.location.href = result.redirect || 'login.html';
+                return;
+            }
+
+            seedCitas();
+
+            document.getElementById('btnLogout').addEventListener('click', () => {
+                logout();
+                window.location.href = 'index.html';
+            });
+
+            // Horario semanal (Lun-Dom) con rangos
+            const DAY_NAMES = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+
+            function renderScheduleEditor() {
+                const editor = document.getElementById('scheduleEditor');
+                const schedule = getScheduleWithDefaults();
+                editor.innerHTML = '';
+                for (let dow = 0; dow <= 6; dow++) {
+                    const dayName = DAY_NAMES[dow];
+                    const ranges = schedule[String(dow)] || [];
+                    const row = document.createElement('div');
+                    row.className = 'schedule-day-row';
+                    row.dataset.dow = dow;
+                    row.innerHTML = `<label class="schedule-day-label">${dayName}</label><div class="schedule-ranges"></div><button type="button" class="btn btn-ghost btn-sm schedule-add-range">+ Agregar rango</button>`;
+                    const rangesContainer = row.querySelector('.schedule-ranges');
+                    if (ranges.length === 0) {
+                        rangesContainer.innerHTML = '<span class="schedule-empty-hint">Sin horario</span>';
+                    } else {
+                        ranges.forEach((r) => {
+                            rangesContainer.appendChild(createRangeRow(r.start, r.end));
+                        });
+                    }
+                    row.querySelector('.schedule-add-range').addEventListener('click', () => {
+                        if (rangesContainer.querySelector('.schedule-empty-hint')) rangesContainer.innerHTML = '';
+                        rangesContainer.appendChild(createRangeRow('09:00', '18:00'));
+                    });
+                    editor.appendChild(row);
+                }
+                document.getElementById('btnGuardarHorario').addEventListener('click', saveSchedule);
+            }
+
+            function createRangeRow(start, end) {
+                const div = document.createElement('div');
+                div.className = 'schedule-range-row';
+                div.innerHTML = `
+                    <input type="time" class="form-input schedule-time" data-type="start" value="${start || '09:00'}" step="900">
+                    <span class="schedule-range-sep">–</span>
+                    <input type="time" class="form-input schedule-time" data-type="end" value="${end || '18:00'}" step="900">
+                    <button type="button" class="btn btn-ghost btn-sm schedule-remove" aria-label="Quitar">&times;</button>
+                `;
+                div.querySelector('.schedule-remove').addEventListener('click', () => {
+                    div.remove();
+                    const container = div.parentElement;
+                    if (container.querySelectorAll('.schedule-range-row').length === 0) {
+                        container.innerHTML = '<span class="schedule-empty-hint">Sin horario</span>';
+                    }
+                });
+                return div;
+            }
+
+            function saveSchedule() {
+                const editor = document.getElementById('scheduleEditor');
+                const schedule = {};
+                editor.querySelectorAll('.schedule-day-row').forEach(row => {
+                    const dow = row.dataset.dow;
+                    const ranges = [];
+                    row.querySelectorAll('.schedule-range-row').forEach(rr => {
+                        const start = rr.querySelector('[data-type="start"]')?.value || '09:00';
+                        const end = rr.querySelector('[data-type="end"]')?.value || '18:00';
+                        if (start && end) ranges.push({ start, end });
+                    });
+                    schedule[dow] = ranges;
+                });
+                setSchedule(schedule);
+                showToast('Horario guardado correctamente', 'success');
+            }
+
+            renderScheduleEditor();
+
+            function getFilters() {
+                return {
+                    search: (document.getElementById('searchInput').value || '').toLowerCase(),
+                    estado: document.getElementById('filterEstado').value,
+                    servicio: document.getElementById('filterServicio').value,
+                    fecha: document.getElementById('filterFecha').value,
+                };
+            }
+
+            function filterCitas() {
+                const filters = getFilters();
+                return getCitas().filter(c => {
+                    if (filters.search) {
+                        const text = [c.nombre, c.email, c.whatsapp].join(' ').toLowerCase();
+                        if (!text.includes(filters.search)) return false;
+                    }
+                    if (filters.estado && c.estado !== filters.estado) return false;
+                    if (filters.servicio && c.servicio !== filters.servicio) return false;
+                    if (filters.fecha && c.fecha !== filters.fecha) return false;
+                    return true;
+                });
+            }
+
+            function updateMetrics() {
+                const citas = getCitas();
+                document.getElementById('metricTotal').textContent = citas.length;
+                document.getElementById('metricPendientes').textContent = citas.filter(c => c.estado === 'Pendiente').length;
+                document.getElementById('metricConfirmadas').textContent = citas.filter(c => c.estado === 'Confirmada' || c.estado === 'Reprogramada').length;
+                document.getElementById('metricCanceladas').textContent = citas.filter(c => c.estado === 'Cancelada').length;
+
+                const agendaFecha = document.getElementById('agendaDayFecha')?.value;
+                const ocupWrap = document.getElementById('metricOcupacionWrap');
+                if (ocupWrap && agendaFecha) {
+                    const { ocupados, todos } = getEstadoSlotsParaFecha(agendaFecha);
+                    ocupWrap.style.display = 'block';
+                    document.getElementById('metricOcupacion').textContent = `${ocupados.length}/${todos.length}`;
+                } else if (ocupWrap) {
+                    ocupWrap.style.display = 'none';
+                }
+            }
+
+            function escapeHtml(s) {
+                const div = document.createElement('div');
+                div.textContent = s || '';
+                return div.innerHTML;
+            }
+
+            function getEditHoraOptions(cita) {
+                const slots = getSlotsDisponiblesParaFecha(cita.fecha);
+                const opts = slots.includes(cita.horaInicio) ? slots : [...slots, cita.horaInicio].sort();
+                return opts.map(s => `<option value="${s}" ${s === cita.horaInicio ? 'selected' : ''}>${s}</option>`).join('');
+            }
+
+            function getBadgeClass(estado) {
+                const e = (estado || '').toLowerCase();
+                if (e === 'confirmada') return 'badge-confirmada';
+                if (e === 'reprogramada') return 'badge-reprogramada';
+                if (e === 'cancelada') return 'badge-cancelada';
+                return 'badge-pendiente';
+            }
+
+            function openEditModal(cita) {
+                const content = `
+                    <div class="form-group">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" id="editNombre" class="form-input" value="${escapeHtml(cita.nombre)}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">WhatsApp</label>
+                        <input type="tel" id="editWhatsapp" class="form-input" value="${escapeHtml(cita.whatsapp)}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="editEmail" class="form-input" value="${escapeHtml(cita.email)}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Servicio</label>
+                        <select id="editServicio" class="form-input">
+                            <option value="Curso" ${cita.servicio === 'Curso' ? 'selected' : ''}>Curso</option>
+                            <option value="Mentoría" ${cita.servicio === 'Mentoría' ? 'selected' : ''}>Mentoría</option>
+                            <option value="Copytrading" ${cita.servicio === 'Copytrading' ? 'selected' : ''}>Copytrading</option>
+                        </select>
+                    </div>
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label class="form-label">Fecha</label>
+                            <input type="date" id="editFecha" class="form-input" value="${cita.fecha}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Hora inicio</label>
+                            <select id="editHora" class="form-input">
+                                ${getEditHoraOptions(cita)}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estado</label>
+                        <select id="editEstado" class="form-input">
+                            <option value="Pendiente" ${cita.estado === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+                            <option value="Confirmada" ${cita.estado === 'Confirmada' ? 'selected' : ''}>Confirmada</option>
+                            <option value="Reprogramada" ${cita.estado === 'Reprogramada' ? 'selected' : ''}>Reprogramada</option>
+                            <option value="Cancelada" ${cita.estado === 'Cancelada' ? 'selected' : ''}>Cancelada</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Comentarios</label>
+                        <textarea id="editComentarios" class="form-input" rows="2">${escapeHtml(cita.comentarios)}</textarea>
+                    </div>
+                `;
+
+                showModal({
+                    title: 'Editar cita',
+                    content,
+                    confirmText: 'Guardar',
+                    cancelText: 'Cancelar',
+                    onConfirm: () => {
+                        const fecha = document.getElementById('editFecha').value;
+                        const horaInicio = document.getElementById('editHora').value;
+
+                        const res = actualizarCita(cita.id, {
+                            nombre: document.getElementById('editNombre').value.trim(),
+                            whatsapp: document.getElementById('editWhatsapp').value.trim(),
+                            email: document.getElementById('editEmail').value.trim(),
+                            servicio: document.getElementById('editServicio').value,
+                            fecha,
+                            horaInicio,
+                            estado: document.getElementById('editEstado').value,
+                            comentarios: document.getElementById('editComentarios').value.trim(),
+                        });
+
+                        if (res.success) {
+                            showToast('Cita actualizada', 'success');
+                            render();
+                        } else {
+                            showToast(res.error, 'error');
+                        }
+                    },
+                });
+            }
+
+            function render() {
+                const citas = filterCitas().sort((a, b) => {
+                    if (a.fecha !== b.fecha) return a.fecha.localeCompare(b.fecha);
+                    return a.horaInicio.localeCompare(b.horaInicio);
+                });
+
+                updateMetrics();
+
+                document.getElementById('emptyAdmin').style.display = citas.length === 0 ? 'block' : 'none';
+
+                const tbody = document.getElementById('adminTableBody');
+                tbody.innerHTML = '';
+                citas.forEach(c => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${escapeHtml(c.nombre)}</td>
+                        <td>${escapeHtml(c.whatsapp)}<br><small>${escapeHtml(c.email)}</small></td>
+                        <td>${escapeHtml(c.fecha)}</td>
+                        <td>${c.horaInicio} - ${c.horaFin}</td>
+                        <td><span class="badge ${getBadgeClass(c.estado)}">${escapeHtml(c.estado)}</span></td>
+                        <td>
+                            <div class="admin-table-actions">
+                                <button type="button" class="btn btn-danger btn-sm" data-delete="${c.id}">Eliminar</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                document.querySelectorAll('[data-delete]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.dataset.delete;
+                        showModal({
+                            title: 'Eliminar cita',
+                            content: '<p>¿Estás seguro de eliminar esta cita? Esta acción no se puede deshacer.</p>',
+                            confirmText: 'Sí, eliminar',
+                            cancelText: 'Cancelar',
+                            onConfirm: () => {
+                                eliminarCita(id);
+                                showToast('Cita eliminada', 'success');
+                                render();
+                            },
+                        });
+                    });
+                });
+
+                // Mobile cards
+                const cardsEl = document.getElementById('adminCards');
+                if (window.innerWidth <= 768) {
+                    cardsEl.style.display = 'block';
+                    cardsEl.innerHTML = citas.map(c => `
+                        <div class="admin-card-mobile">
+                            <div class="cita-card-header">
+                                <span class="cita-card-servicio">${escapeHtml(c.nombre)}</span>
+                                <span class="badge ${getBadgeClass(c.estado)}">${escapeHtml(c.estado)}</span>
+                            </div>
+                            <div class="cita-card-meta">${escapeHtml(c.whatsapp)} · ${escapeHtml(c.email)}</div>
+                            <div class="cita-card-meta">${c.fecha} · ${c.horaInicio} - ${c.horaFin}</div>
+                            <div class="cita-card-actions" style="margin-top: 0.75rem;">
+                                <button type="button" class="btn btn-danger btn-sm" data-delete="${c.id}">Eliminar</button>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    cardsEl.querySelectorAll('[data-delete]').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            showModal({
+                                title: 'Eliminar cita',
+                                content: '<p>¿Estás seguro de eliminar esta cita?</p>',
+                                confirmText: 'Sí, eliminar',
+                                cancelText: 'Cancelar',
+                                onConfirm: () => {
+                                    eliminarCita(btn.dataset.delete);
+                                    showToast('Cita eliminada', 'success');
+                                    render();
+                                },
+                            });
+                        });
+                    });
+                } else {
+                    cardsEl.style.display = 'none';
+                }
+            }
+
+            document.getElementById('searchInput').addEventListener('input', render);
+            document.getElementById('filterEstado').addEventListener('change', render);
+            document.getElementById('filterServicio').addEventListener('change', render);
+            document.getElementById('filterFecha').addEventListener('change', render);
+            document.getElementById('btnClearFilters').addEventListener('click', () => {
+                document.getElementById('searchInput').value = '';
+                document.getElementById('filterEstado').value = '';
+                document.getElementById('filterServicio').value = '';
+                document.getElementById('filterFecha').value = '';
+                render();
+            });
+
+            // Toggle vista Tabla / Agenda día
+            const hoyStr = new Date().toISOString().split('T')[0];
+            document.getElementById('agendaDayFecha').min = hoyStr;
+
+            function switchView(view) {
+                const isTable = view === 'table';
+                document.getElementById('adminTableSection').style.display = isTable ? 'block' : 'none';
+                document.getElementById('adminAgendaSection').style.display = isTable ? 'none' : 'block';
+                document.getElementById('adminCards').style.display = isTable && window.innerWidth <= 768 ? 'flex' : 'none';
+                document.getElementById('btnViewTable').className = 'btn btn-sm' + (isTable ? ' btn-primary' : ' btn-ghost');
+                document.getElementById('btnViewAgenda').className = 'btn btn-sm' + (!isTable ? ' btn-primary' : ' btn-ghost');
+                if (!isTable) {
+                    if (!document.getElementById('agendaDayFecha').value) {
+                        document.getElementById('agendaDayFecha').value = hoyStr;
+                    }
+                    renderAgendaDay();
+                    updateMetrics();
+                } else {
+                    document.getElementById('metricOcupacionWrap').style.display = 'none';
+                }
+            }
+
+            function renderAgendaDay() {
+                const fecha = document.getElementById('agendaDayFecha').value || hoyStr;
+                document.getElementById('agendaDayFecha').value = fecha;
+                const { disponibles, ocupados, todos } = getEstadoSlotsParaFecha(fecha);
+                const citasDelDia = getCitas().filter(c => c.fecha === fecha && c.estado !== 'Cancelada');
+                const totalSlots = todos.length;
+                const ocupadosCount = ocupados.length;
+                const pct = totalSlots ? Math.round((ocupadosCount / totalSlots) * 100) : 0;
+
+                document.getElementById('agendaOcupacion').innerHTML = `
+                    <span class="agenda-ocupacion-label">${fecha} · Ocupación:</span>
+                    <div class="agenda-ocupacion-bar-inner">
+                        <div class="agenda-ocupacion-fill" style="width: ${pct}%"></div>
+                    </div>
+                    <span class="agenda-ocupacion-count">${ocupadosCount}/${totalSlots} (${pct}%)</span>
+                `;
+
+                const timeline = document.getElementById('agendaTimeline');
+                timeline.innerHTML = '';
+                const mapaCitas = {};
+                citasDelDia.forEach(c => { mapaCitas[c.horaInicio] = c; });
+
+                todos.forEach(slot => {
+                    const cita = mapaCitas[slot];
+                    const div = document.createElement('div');
+                    div.className = 'agenda-timeline-slot' + (cita ? ' ocupado ocupado-' + (cita.estado || 'pendiente').toLowerCase() : ' libre');
+                    div.innerHTML = cita
+                        ? `<span class="slot-hora">${slot}</span> <span class="slot-info">${escapeHtml(cita.nombre)} · ${escapeHtml(cita.servicio)}</span> <span class="badge badge-${(cita.estado || '').toLowerCase()}">${escapeHtml(cita.estado)}</span>`
+                        : `<span class="slot-hora">${slot}</span> <span class="slot-info">Libre</span>`;
+                    if (cita) {
+                        div.style.cursor = 'pointer';
+                        div.addEventListener('click', () => openEditModal(cita));
+                    }
+                    timeline.appendChild(div);
+                });
+            }
+
+            document.getElementById('btnViewTable').addEventListener('click', () => switchView('table'));
+            document.getElementById('btnViewAgenda').addEventListener('click', () => switchView('agenda'));
+            document.getElementById('btnCargarAgenda').addEventListener('click', () => {
+                renderAgendaDay();
+                updateMetrics();
+            });
+            document.getElementById('agendaDayFecha').addEventListener('change', updateMetrics);
+
+            render();
+        })();
+    </script>
+</body>
+</html>

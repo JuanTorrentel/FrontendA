@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear cuenta - Yotago School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body class="app-page">
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo-link">
+                    <img src="assets/logo-ytg.png" alt="Yotago School" class="logo-img" width="168" height="56">
+                    <span class="logo-name">Yotago School</span>
+                </a>
+                <a href="login.html" class="nav-link">Iniciar sesión</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <div class="login-container">
+            <div class="login-card">
+                <h1 class="login-title">Crear cuenta</h1>
+                <p class="login-subtitle">Regístrate para acceder a la agenda de citas</p>
+
+                <form id="registerForm" class="login-form">
+                    <div class="form-group">
+                        <label for="nombre" class="form-label">Nombre completo *</label>
+                        <input type="text" id="nombre" name="nombre" class="form-input" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Correo electrónico *</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="tu@correo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="celular" class="form-label">Número de celular *</label>
+                        <input type="tel" id="celular" name="celular" class="form-input" placeholder="+57 300 123 4567" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Contraseña *</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Mínimo 6 caracteres" minlength="6" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordConfirm" class="form-label">Confirmar contraseña *</label>
+                        <input type="password" id="passwordConfirm" name="passwordConfirm" class="form-input" placeholder="Repite tu contraseña" minlength="6" required>
+                    </div>
+                    <div id="registerError" class="form-error" role="alert" aria-live="polite"></div>
+                    <button type="submit" class="btn btn-primary btn-large btn-block">Crear cuenta</button>
+                </form>
+
+                <p class="register-login-link" style="margin-top: 1.5rem; text-align: center;">
+                    ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+    <script>
+        (function() {
+            const result = checkAuth('login');
+            if (!result.allowed && result.redirect) {
+                window.location.href = result.redirect;
+                return;
+            }
+
+            const form = document.getElementById('registerForm');
+            const errorEl = document.getElementById('registerError');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                errorEl.textContent = '';
+                errorEl.classList.remove('visible');
+
+                const nombre = form.nombre.value.trim();
+                const email = form.email.value.trim();
+                const celular = form.celular?.value?.trim() || '';
+                const password = form.password.value;
+                const passwordConfirm = form.passwordConfirm?.value;
+
+                if (!nombre || !email || !celular || !password) {
+                    errorEl.textContent = 'Completa todos los campos obligatorios.';
+                    errorEl.classList.add('visible');
+                    return;
+                }
+                if (password.length < 6) {
+                    errorEl.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+                    errorEl.classList.add('visible');
+                    return;
+                }
+                if (password !== passwordConfirm) {
+                    errorEl.textContent = 'Las contraseñas no coinciden.';
+                    errorEl.classList.add('visible');
+                    return;
+                }
+
+                const res = register(nombre, email, celular, password);
+                if (res.success) {
+                    if (res.verifyUrl) {
+                        window.location.href = res.verifyUrl;
+                    } else {
+                        showToast('¡Registro exitoso! Revisa tu correo para verificar tu cuenta.', 'success');
+                        form.reset();
+                    }
+                } else {
+                    errorEl.textContent = res.error || 'Error al registrarse';
+                    errorEl.classList.add('visible');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

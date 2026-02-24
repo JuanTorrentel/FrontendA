@@ -104,51 +104,6 @@ filterButtons.forEach(button => {
 });
 
 // ============================================
-// FORMULARIO DE CONTACTO
-// ============================================
-
-const contactForm = document.getElementById('contactForm');
-
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        // Obtener datos del formulario
-        const formData = new FormData(contactForm);
-        const data = Object.fromEntries(formData);
-        
-        // Validación básica
-        if (!data.nombre || !data.whatsapp || !data.correo) {
-            alert('Por favor, completa todos los campos obligatorios.');
-            return;
-        }
-        
-        // Aquí puedes agregar la lógica para enviar los datos
-        // Por ejemplo, a un endpoint o a WhatsApp
-        console.log('Datos del formulario:', data);
-        
-        // Opción 1: Enviar a WhatsApp
-        const whatsappNumber = '1234567890'; // Reemplazar con número real
-        const message = `Hola, me interesa tu formación en trading.\n\n` +
-                       `Nombre: ${data.nombre}\n` +
-                       `WhatsApp: ${data.whatsapp}\n` +
-                       `Email: ${data.correo}\n` +
-                       `Nivel: ${data.nivel || 'No especificado'}\n` +
-                       `Objetivo: ${data.objetivo || 'No especificado'}\n` +
-                       `Interés: ${data.interes || 'No especificado'}`;
-        
-        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
-        
-        // Opción 2: Mostrar mensaje de éxito
-        alert('¡Gracias por tu interés! Te contactaremos pronto.');
-        
-        // Limpiar formulario
-        contactForm.reset();
-    });
-}
-
-// ============================================
 // SMOOTH SCROLL PARA ENLACES
 // ============================================
 

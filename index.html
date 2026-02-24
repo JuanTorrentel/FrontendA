@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <!-- TrustBox script -->
+    <script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
+    <!-- End TrustBox script -->
 </head>
 <body>
     <!-- Header Fijo -->
@@ -27,7 +30,8 @@
                     <a href="#copytrading" class="nav-link">Copytrading</a>
                     <a href="#testimonios" class="nav-link">Testimonios</a>
                     <a href="#faq" class="nav-link">FAQ</a>
-                    <a href="#contacto" class="nav-link">Contacto</a>
+                    <a href="#registro" class="nav-link">Agenda una cita</a>
+                    <a href="login.html" class="nav-link nav-cta" id="navAuthLink">Iniciar sesión</a>
                 </nav>
                 <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
                     <span></span>
@@ -49,8 +53,8 @@
                     Desarrolla las habilidades necesarias para operar en los mercados financieros con profesionalismo.
                 </p>
                 <div class="hero-ctas">
-                    <a href="#contacto" class="btn btn-primary btn-large">Comenzar mi formación</a>
-                    <a href="#metodologia" class="btn btn-outline btn-large">Conocer metodología</a>
+                    <a href="login.html" class="btn btn-primary btn-large" id="heroAuthLink">Iniciar sesión</a>
+                    <a href="https://api.whatsapp.com/send/?phone=573223764397&text=Hola%2C%20quiero%20agendar%20una%20cita%20para%20formaci%C3%B3n%20en%20trading" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-large">Agendar por WhatsApp</a>
                 </div>
                 <div class="hero-social">
                     <p class="hero-social-text">Sígueme y mira mi contenido educativo</p>
@@ -116,26 +120,6 @@
                     <h3 class="social-card-title">Telegram</h3>
                     <p class="social-card-text">Análisis de mercado, reflexiones profesionales y comunidad</p>
                     <a href="https://t.me/+RQnwb1WCNwBiZjgx" target="_blank" rel="noopener noreferrer" class="social-card-link">Unirse →</a>
-                </div>
-            </div>
-            <div class="social-preview-grid">
-                <div class="preview-item">
-                    <div class="preview-placeholder">Preview 1</div>
-                </div>
-                <div class="preview-item">
-                    <div class="preview-placeholder">Preview 2</div>
-                </div>
-                <div class="preview-item">
-                    <div class="preview-placeholder">Preview 3</div>
-                </div>
-                <div class="preview-item">
-                    <div class="preview-placeholder">Preview 4</div>
-                </div>
-                <div class="preview-item">
-                    <div class="preview-placeholder">Preview 5</div>
-                </div>
-                <div class="preview-item">
-                    <div class="preview-placeholder">Preview 6</div>
                 </div>
             </div>
         </div>
@@ -358,7 +342,7 @@
                     <div class="plan-footer">
                         <p class="plan-modality">Modalidad: Online</p>
                         <p class="plan-capacity">Cupos limitados</p>
-                        <a href="#contacto" class="btn btn-outline btn-block">Más información</a>
+                        <a href="#registro" class="btn btn-outline btn-block">Más información</a>
                     </div>
                 </div>
                 <div class="plan-card plan-card-featured">
@@ -379,7 +363,7 @@
                     <div class="plan-footer">
                         <p class="plan-modality">Modalidad: Online</p>
                         <p class="plan-capacity">Cupos limitados</p>
-                        <a href="#contacto" class="btn btn-primary btn-block">Aplicar ahora</a>
+                        <a href="#registro" class="btn btn-primary btn-block">Aplicar ahora</a>
                     </div>
                 </div>
                 <div class="plan-card">
@@ -399,7 +383,7 @@
                     <div class="plan-footer">
                         <p class="plan-modality">Modalidad: Online</p>
                         <p class="plan-capacity">Cupos muy limitados</p>
-                        <a href="#contacto" class="btn btn-outline btn-block">Consultar disponibilidad</a>
+                        <a href="#registro" class="btn btn-outline btn-block">Consultar disponibilidad</a>
                     </div>
                 </div>
             </div>
@@ -536,161 +520,87 @@
     <section class="testimonials-section" id="testimonios">
         <div class="container">
             <div class="testimonials-header">
-                <div class="trustpilot-badge">
-                    <span>Reséñanos en</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                    <span>Trustpilot</span>
-                </div>
                 <h2 class="section-title">Opiniones verificadas en Trustpilot</h2>
                 <p class="section-subtitle">Experiencias reales sobre el proceso de aprendizaje</p>
             </div>
 
-            <div class="testimonials-filters">
-                <button class="filter-btn active" data-filter="all">Todas</button>
-                <button class="filter-btn" data-filter="curso">Curso</button>
-                <button class="filter-btn" data-filter="mentoria">Mentoría</button>
-                <button class="filter-btn" data-filter="copytrading">Copytrading</button>
+            <!-- TrustBox widget - Review Collector -->
+            <div class="trustpilot-widget" data-locale="es-ES" data-template-id="56278e9abfbbba0bdcd568bc" data-businessunit-id="694075ce7a37393f19ebbd54" data-style-height="52px" data-style-width="100%" data-token="220ed07b-02e4-484d-8424-d2deccfa3a03">
+                <a href="https://es.trustpilot.com/review/yotagoprofessional.com" target="_blank" rel="noopener">Trustpilot</a>
             </div>
+            <!-- End TrustBox widget -->
 
             <div class="testimonials-grid">
-                <div class="testimonial-card" data-category="curso">
+                <div class="testimonial-card">
                     <div class="testimonial-header">
-                        <div class="testimonial-avatar">DO</div>
+                        <div class="testimonial-avatar" aria-label="dolly">DO</div>
                         <div class="testimonial-info">
-                            <h4 class="testimonial-name">Dolly</h4>
-                            <p class="testimonial-location">US • 1 opinión</p>
+                            <h4 class="testimonial-name">dolly</h4>
+                            <p class="testimonial-location">US • 1 reseña</p>
                         </div>
                     </div>
-                    <div class="testimonial-rating">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
+                    <div class="testimonial-rating" aria-label="5 estrellas">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     </div>
                     <h5 class="testimonial-title">Muy buena experiencia</h5>
                     <p class="testimonial-text">Me gustó aprender trading con él, explica tranquilo, tiene paciencia y te hace sentir cómoda aprendiendo. Lo recomiendo.</p>
                     <div class="testimonial-meta">
-                        <span class="testimonial-category">Curso</span>
-                        <span class="testimonial-date">19 de diciembre de 2024</span>
+                        <span class="testimonial-date">19 dic 2025</span>
                     </div>
                 </div>
 
-                <div class="testimonial-card" data-category="mentoria">
+                <div class="testimonial-card">
                     <div class="testimonial-header">
-                        <div class="testimonial-avatar">PA</div>
+                        <img src="assets/avatar-piero.png" alt="Piero Alexis" class="testimonial-avatar-img">
                         <div class="testimonial-info">
                             <h4 class="testimonial-name">Piero Alexis</h4>
-                            <p class="testimonial-location">PE • 1 opinión</p>
+                            <p class="testimonial-location">PE • 1 reseña</p>
                         </div>
                     </div>
-                    <div class="testimonial-rating">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
+                    <div class="testimonial-rating" aria-label="5 estrellas">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     </div>
-                    <h5 class="testimonial-title">Excelente acompañamiento</h5>
-                    <p class="testimonial-text">La mentoría personalizada me ayudó a entender mejor mi proceso y mejorar mi disciplina. El feedback es muy claro y constructivo.</p>
+                    <h5 class="testimonial-title">Fabulosa mentoria A1</h5>
+                    <p class="testimonial-text">Tuve una bonita experiencia en esta mentoría, había quemado 2 cuentas anteriormente en otra mentoría y ahora estudiando aquí, he mejorado mucho, incluso puedo operar por mí mismo, además analizar el gráfico de 1 min y me dieron tips de inversiones — recomendado al 100%.</p>
                     <div class="testimonial-meta">
-                        <span class="testimonial-category">Mentoría</span>
-                        <span class="testimonial-date">15 de diciembre de 2024</span>
+                        <span class="testimonial-date">19 dic 2025</span>
                     </div>
                 </div>
 
-                <div class="testimonial-card" data-category="copytrading">
+                <div class="testimonial-card">
                     <div class="testimonial-header">
-                        <div class="testimonial-avatar">MC</div>
+                        <img src="assets/avatar-tony.png" alt="Tony Okkram" class="testimonial-avatar-img">
                         <div class="testimonial-info">
-                            <h4 class="testimonial-name">María C.</h4>
-                            <p class="testimonial-location">CO • 2 opiniones</p>
+                            <h4 class="testimonial-name">Tony Okkram</h4>
+                            <p class="testimonial-location">CA • 1 reseña</p>
                         </div>
                     </div>
-                    <div class="testimonial-rating">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
+                    <div class="testimonial-rating" aria-label="5 estrellas">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     </div>
-                    <h5 class="testimonial-title">Transparencia y control</h5>
-                    <p class="testimonial-text">Me gusta que puedo configurar mi riesgo y pausar cuando quiero. El proceso es claro y no hay promesas exageradas.</p>
+                    <h5 class="testimonial-title">Los resultados hablan por sí mismos</h5>
+                    <p class="testimonial-text">Me está ayudando demasiado las cosas que aprendo aquí, el mentor es muy paciente y me ha enseñado mucho sobre trading, aclarando mis dudas. De verdad se nota en los resultados que estoy aprovechando mis inversiones como nunca antes lo había hecho.</p>
                     <div class="testimonial-meta">
-                        <span class="testimonial-category">Copytrading</span>
-                        <span class="testimonial-date">10 de diciembre de 2024</span>
-                    </div>
-                </div>
-
-                <div class="testimonial-card" data-category="curso">
-                    <div class="testimonial-header">
-                        <div class="testimonial-avatar">JL</div>
-                        <div class="testimonial-info">
-                            <h4 class="testimonial-name">Juan L.</h4>
-                            <p class="testimonial-location">MX • 1 opinión</p>
-                        </div>
-                    </div>
-                    <div class="testimonial-rating">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                    </div>
-                    <h5 class="testimonial-title">Metodología clara</h5>
-                    <p class="testimonial-text">La estructura del curso es muy clara y el material está bien organizado. Aprendí mucho sobre gestión de riesgo.</p>
-                    <div class="testimonial-meta">
-                        <span class="testimonial-category">Curso</span>
-                        <span class="testimonial-date">5 de diciembre de 2024</span>
+                        <span class="testimonial-date">20 dic 2025</span>
                     </div>
                 </div>
             </div>
 
             <div class="testimonials-ctas">
-                <a href="https://www.trustpilot.com/review/ejemplo.com" target="_blank" class="btn btn-primary btn-large">Ver todas las reseñas en Trustpilot</a>
-                <a href="https://www.trustpilot.com/review/ejemplo.com" target="_blank" class="btn btn-outline btn-large">Dejar una reseña</a>
+                <a href="https://es.trustpilot.com/review/yotagoprofessional.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-large">Ver todas las reseñas en Trustpilot</a>
+                <a href="https://es.trustpilot.com/review/yotagoprofessional.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-large">Dejar una reseña</a>
             </div>
         </div>
     </section>
@@ -771,61 +681,29 @@
         </div>
     </section>
 
-    <!-- Sección: Contacto / Formulario -->
-    <section class="contact-section" id="contacto">
+    <!-- Sección: Agenda una cita (informativa) -->
+    <section class="contact-section" id="registro">
         <div class="container">
-            <h2 class="section-title">Comienza tu formación</h2>
-            <p class="section-subtitle">Completa el formulario y te contactaremos para agendar tu diagnóstico</p>
-            <form class="contact-form" id="contactForm">
-                <div class="form-group">
-                    <label for="nombre" class="form-label">Tu nombre *</label>
-                    <input type="text" id="nombre" name="nombre" class="form-input" required>
+            <h2 class="section-title">Agenda una cita</h2>
+            <p class="section-subtitle">Accede al sistema de gestión de citas para consultar disponibilidad y agendar tu sesión.</p>
+
+            <div class="agenda-info-card">
+                <h3 class="agenda-info-title">¿Cómo funciona el sistema de citas?</h3>
+                <p class="agenda-info-text">Este sistema te permite consultar horarios disponibles y agendar citas virtuales de 15 minutos. Una vez inicies sesión, podrás seleccionar el servicio, elegir un horario y gestionar tus citas desde tu panel personal.</p>
+                <ul class="agenda-info-list">
+                    <li>Citas virtuales de 15 minutos</li>
+                    <li>Horarios según disponibilidad</li>
+                    <li>Gestión de citas en tu panel</li>
+                    <li>Reprogramación y cancelación</li>
+                </ul>
+                <div class="agenda-info-ctas agenda-info-ctas-single">
+                    <a href="login.html" class="btn btn-primary btn-large" id="agendaAuthLink">Iniciar sesión</a>
                 </div>
-                <div class="form-group">
-                    <label for="whatsapp" class="form-label">Tu WhatsApp *</label>
-                    <input type="tel" id="whatsapp" name="whatsapp" class="form-input" placeholder="+57 300 123 4567" required>
+                <p class="agenda-info-register">¿No tienes cuenta? <a href="register.html">Regístrate aquí</a></p>
+                <div class="agenda-info-disclaimer">
+                    <p class="disclaimer-text">El trading implica riesgo. No hay resultados garantizados. Esta es educación financiera, no asesoría de inversión personalizada.</p>
                 </div>
-                <div class="form-group">
-                    <label for="correo" class="form-label">Tu correo *</label>
-                    <input type="email" id="correo" name="correo" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label for="nivel" class="form-label">Nivel actual</label>
-                    <select id="nivel" name="nivel" class="form-input">
-                        <option value="">Selecciona tu nivel</option>
-                        <option value="principiante">Principiante</option>
-                        <option value="intermedio">Intermedio</option>
-                        <option value="avanzado">Avanzado</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="objetivo" class="form-label">Objetivo principal</label>
-                    <select id="objetivo" name="objetivo" class="form-input">
-                        <option value="">Selecciona tu objetivo</option>
-                        <option value="aprender">Aprender desde cero</option>
-                        <option value="mejorar">Mejorar mi estrategia</option>
-                        <option value="disciplina">Desarrollar disciplina</option>
-                        <option value="copytrading">Probar copytrading</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="interes" class="form-label">Interés principal</label>
-                    <select id="interes" name="interes" class="form-input">
-                        <option value="">Selecciona tu interés</option>
-                        <option value="curso">Curso</option>
-                        <option value="mentoria">Mentoría</option>
-                        <option value="copytrading">Copytrading</option>
-                        <option value="todos">Todos los servicios</option>
-                    </select>
-                </div>
-                <div class="form-disclaimer">
-                    <p class="disclaimer-text">
-                        <strong>Al enviar este formulario, aceptas que:</strong> El trading implica riesgo de pérdida de capital. 
-                        No hay resultados garantizados. Esta es educación financiera, no asesoría de inversión personalizada.
-                    </p>
-                </div>
-                <button type="submit" class="btn btn-primary btn-large btn-block">Enviar solicitud</button>
-            </form>
+            </div>
         </div>
     </section>
 
@@ -894,7 +772,23 @@
         </svg>
     </a>
 
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
     <script src="script.js"></script>
+    <script>
+        (function() {
+            const session = getSession();
+            if (!session?.isAuthenticated) return;
+            const href = session.rol === 'admin' ? 'admin.html' : 'agenda.html';
+            const text = session.rol === 'admin' ? 'Panel admin' : 'Ir a agenda';
+            document.querySelectorAll('#navAuthLink, #heroAuthLink, #agendaAuthLink').forEach(el => {
+                if (el) {
+                    el.href = href;
+                    el.textContent = text;
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
 

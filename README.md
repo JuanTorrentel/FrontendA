@@ -15,11 +15,26 @@ Landing page moderna, minimalista y premium para un profesor de trading que ofre
 
 ```
 .
-├── index.html          # Estructura HTML completa
-├── styles.css          # Estilos CSS premium
-├── script.js           # JavaScript para interactividad
+├── index.html          # Landing page
+├── login.html          # Login (sesión simulada)
+├── agenda.html         # Agendamiento de citas (usuario)
+├── admin.html          # Panel admin citas (CRUD)
+├── styles.css          # Estilos globales
+├── app.css             # Estilos login, agenda, admin
+├── script.js           # JavaScript landing
+├── auth.js             # Auth mock, sesión
+├── citas.js            # CRUD citas, slots 15 min
+├── app.js              # Toast, modal, utilidades
+├── SOLUCION.md         # Arquitectura y documentación
 └── README.md           # Este archivo
 ```
+
+### ⚠️ Módulo de citas (SOLO FRONT-END)
+
+- **Login**: admin@demo.com / 123456 → Panel admin | user@demo.com / 123456 → Agenda
+- **Agenda**: Citas virtuales de 15 min, sin solapamientos
+- **Admin**: CRUD, filtros, métricas
+- **Persistencia**: localStorage (citas), sessionStorage (sesión)
 
 ## 🎯 Secciones Implementadas
 
