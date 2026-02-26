@@ -61,6 +61,8 @@
         </div>
     </main>
 
+    <script src="config.js"></script>
+    <script src="api.js"></script>
     <script src="auth.js"></script>
     <script src="app.js"></script>
     <script>
@@ -74,7 +76,7 @@
             const form = document.getElementById('registerForm');
             const errorEl = document.getElementById('registerError');
 
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 errorEl.textContent = '';
                 errorEl.classList.remove('visible');
@@ -101,7 +103,11 @@
                     return;
                 }
 
-                const res = register(nombre, email, celular, password);
+                const btn = form.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                const res = await register(nombre, email, celular, password);
+                btn.disabled = false;
+
                 if (res.success) {
                     if (res.verifyUrl) {
                         window.location.href = res.verifyUrl;

@@ -121,11 +121,13 @@
         </div>
     </main>
 
+    <script src="config.js"></script>
+    <script src="api.js"></script>
     <script src="auth.js"></script>
     <script src="citas.js"></script>
     <script src="app.js"></script>
     <script>
-        (function() {
+        (async function() {
             const result = checkAuth('admin');
             if (!result.allowed) {
                 if (result.msg) showToast(result.msg, 'error');
@@ -133,7 +135,13 @@
                 return;
             }
 
-            seedCitas();
+            try {
+                await loadCitas();
+                await loadSchedule();
+            } catch (err) {
+                showToast(err.message || 'Error al cargar datos', 'error');
+                return;
+            }
 
             document.getElementById('btnLogout').addEventListener('click', () => {
                 logout();
@@ -190,7 +198,7 @@
                 return div;
             }
 
-            function saveSchedule() {
+            async function saveSchedule() {
                 const editor = document.getElementById('scheduleEditor');
                 const schedule = {};
                 editor.querySelectorAll('.schedule-day-row').forEach(row => {
@@ -203,8 +211,12 @@
                     });
                     schedule[dow] = ranges;
                 });
-                setSchedule(schedule);
-                showToast('Horario guardado correctamente', 'success');
+                try {
+                    await setSchedule(schedule);
+                    showToast('Horario guardado correctamente', 'success');
+                } catch (err) {
+                    showToast(err.message || 'Error al guardar', 'error');
+                }
             }
 
             renderScheduleEditor();
@@ -324,11 +336,11 @@
                     content,
                     confirmText: 'Guardar',
                     cancelText: 'Cancelar',
-                    onConfirm: () => {
+                    onConfirm: async () => {
                         const fecha = document.getElementById('editFecha').value;
                         const horaInicio = document.getElementById('editHora').value;
 
-                        const res = actualizarCita(cita.id, {
+                        const res = await actualizarCita(cita.id, {
                             nombre: document.getElementById('editNombre').value.trim(),
                             whatsapp: document.getElementById('editWhatsapp').value.trim(),
                             email: document.getElementById('editEmail').value.trim(),
@@ -386,10 +398,14 @@
                             content: '<p>¿Estás seguro de eliminar esta cita? Esta acción no se puede deshacer.</p>',
                             confirmText: 'Sí, eliminar',
                             cancelText: 'Cancelar',
-                            onConfirm: () => {
-                                eliminarCita(id);
-                                showToast('Cita eliminada', 'success');
-                                render();
+                            onConfirm: async () => {
+                                const res = await eliminarCita(id);
+                                if (res.success) {
+                                    showToast('Cita eliminada', 'success');
+                                    render();
+                                } else {
+                                    showToast(res.error, 'error');
+                                }
                             },
                         });
                     });
@@ -415,15 +431,20 @@
 
                     cardsEl.querySelectorAll('[data-delete]').forEach(btn => {
                         btn.addEventListener('click', () => {
+                            const id = btn.dataset.delete;
                             showModal({
                                 title: 'Eliminar cita',
                                 content: '<p>¿Estás seguro de eliminar esta cita?</p>',
                                 confirmText: 'Sí, eliminar',
                                 cancelText: 'Cancelar',
-                                onConfirm: () => {
-                                    eliminarCita(btn.dataset.delete);
-                                    showToast('Cita eliminada', 'success');
-                                    render();
+                                onConfirm: async () => {
+                                    const res = await eliminarCita(id);
+                                    if (res.success) {
+                                        showToast('Cita eliminada', 'success');
+                                        render();
+                                    } else {
+                                        showToast(res.error, 'error');
+                                    }
                                 },
                             });
                         });

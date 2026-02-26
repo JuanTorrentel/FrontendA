@@ -1,6 +1,6 @@
 /**
- * agenda-calendar.js - Sistema de agendamiento tipo Calendly (SOLO FRONT-END)
- * Calendario mensual + lista de slots + resumen de cita
+ * agenda-calendar.js - Sistema de agendamiento tipo Calendly
+ * Conectado a backend API
  */
 
 (function() {
@@ -13,9 +13,7 @@
 
     const session = getSession();
     const userEmail = session?.usuario?.email || '';
-    const userId = session?.usuario?.id || 2;
-
-    seedCitas();
+    const userId = session?.usuario?.id || '2';
 
     const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
     const WEEKDAYS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
@@ -40,7 +38,6 @@
     const btnCancelarSlot = document.getElementById('btnCancelarSlot');
     const timezoneSelect = document.getElementById('timezone');
 
-    // Timezone preferencia
     const tz = localStorage.getItem('ytg_timezone') || 'America/Lima';
     if (timezoneSelect) {
         timezoneSelect.value = tz;
@@ -74,19 +71,18 @@
     }
 
     function renderCalendar() {
+        if (!calendarMonthLabel) return;
         calendarMonthLabel.textContent = `${MONTHS[currentMonth]} ${currentYear}`;
 
         const firstDay = new Date(currentYear, currentMonth, 1);
         const lastDay = new Date(currentYear, currentMonth + 1, 0);
-        const startDow = (firstDay.getDay() + 6) % 7; // Lun=0
+        const startDow = (firstDay.getDay() + 6) % 7;
         const daysInMonth = lastDay.getDate();
 
         const hoy = new Date();
         const hoyStr = hoy.toISOString().split('T')[0];
 
         let html = '';
-
-        // Días vacíos al inicio
         for (let i = 0; i < startDow; i++) {
             html += '<span class="calendar-day calendar-day-empty"></span>';
         }
@@ -138,6 +134,7 @@
     }
 
     function renderSlots() {
+        if (!slotsList) return;
         slotsList.innerHTML = '';
         slotsEmpty.style.display = 'none';
         slotsSelectDate.style.display = selectedDate ? 'none' : 'block';
@@ -177,7 +174,7 @@
     function selectSlot(slot) {
         selectedSlot = slot;
         document.querySelectorAll('.slot-btn-available').forEach(b => b.classList.remove('slot-btn-selected'));
-        const btn = slotsList.querySelector(`[data-slot="${slot}"]`);
+        const btn = slotsList?.querySelector(`[data-slot="${slot}"]`);
         if (btn) btn.classList.add('slot-btn-selected');
 
         const horaFin = add15Minutes(slot);
@@ -195,26 +192,26 @@
         selectedSlot = null;
         appointmentSummary.style.display = 'none';
         renderSlots();
-        if (slotsList.querySelector('.slot-btn-selected')) {
+        if (slotsList?.querySelector('.slot-btn-selected')) {
             slotsList.querySelector('.slot-btn-selected').classList.remove('slot-btn-selected');
         }
     }
 
-    calendarPrev.addEventListener('click', () => {
+    if (calendarPrev) calendarPrev.addEventListener('click', () => {
         currentMonth--;
         if (currentMonth < 0) { currentMonth = 11; currentYear--; }
         renderCalendar();
     });
 
-    calendarNext.addEventListener('click', () => {
+    if (calendarNext) calendarNext.addEventListener('click', () => {
         currentMonth++;
         if (currentMonth > 11) { currentMonth = 0; currentYear++; }
         renderCalendar();
     });
 
-    btnCancelarSlot?.addEventListener('click', clearSelection);
+    if (btnCancelarSlot) btnCancelarSlot.addEventListener('click', clearSelection);
 
-    btnConfirmarCita?.addEventListener('click', function() {
+    if (btnConfirmarCita) btnConfirmarCita.addEventListener('click', async function() {
         if (!selectedSlot || !selectedDate) {
             showToast('Selecciona una fecha y hora', 'error');
             return;
@@ -231,7 +228,7 @@
             comentarios: '',
         };
 
-        const res = crearCita(data, userId);
+        const res = await crearCita(data, userId);
         if (res.success) {
             showToast('Cita agendada correctamente', 'success');
             clearSelection();
@@ -246,15 +243,17 @@
     function renderMisCitas() {
         const list = document.getElementById('citasList');
         const empty = document.getElementById('emptyCitas');
+        if (!list) return;
+
         const citas = getCitasByUserEmail(userEmail).filter(c => c.estado !== 'Cancelada');
 
         list.innerHTML = '';
 
         if (citas.length === 0) {
-            empty.style.display = 'block';
+            if (empty) empty.style.display = 'block';
             return;
         }
-        empty.style.display = 'none';
+        if (empty) empty.style.display = 'none';
 
         citas.sort((a, b) => {
             if (a.fecha !== b.fecha) return a.fecha.localeCompare(b.fecha);
@@ -290,11 +289,15 @@
                     content: '<p>¿Estás seguro de cancelar esta cita?</p>',
                     confirmText: 'Sí, cancelar',
                     cancelText: 'No',
-                    onConfirm: () => {
-                        actualizarCita(id, { estado: 'Cancelada' });
-                        showToast('Cita cancelada', 'success');
-                        renderMisCitas();
-                        updateCitaActivaBanner();
+                    onConfirm: async () => {
+                        const res = await actualizarCita(id, { estado: 'Cancelada' });
+                        if (res.success) {
+                            showToast('Cita cancelada', 'success');
+                            renderMisCitas();
+                            updateCitaActivaBanner();
+                        } else {
+                            showToast(res.error, 'error');
+                        }
                     },
                 });
             });
@@ -347,14 +350,14 @@
                         fechaInput.addEventListener('change', cargarHoras);
                         cargarHoras();
                     },
-                    onConfirm: (overlayEl) => {
+                    onConfirm: async (overlayEl) => {
                         const fecha = overlayEl?.querySelector('#reprogFecha')?.value;
                         const hora = overlayEl?.querySelector('#reprogHora')?.value;
                         if (!fecha || !hora) {
                             showToast('Selecciona fecha y hora', 'error');
                             return false;
                         }
-                        const res = actualizarCita(id, { fecha, horaInicio: hora, estado: 'Reprogramada' });
+                        const res = await actualizarCita(id, { fecha, horaInicio: hora, estado: 'Reprogramada' });
                         if (res.success) {
                             showToast('Cita reprogramada', 'success');
                             renderMisCitas();
@@ -370,8 +373,19 @@
         });
     }
 
-    renderCalendar();
-    renderSlots();
-    renderMisCitas();
-    updateCitaActivaBanner();
+    async function init() {
+        try {
+            await loadCitas();
+            await loadSchedule();
+        } catch (err) {
+            showToast(err.message || 'Error al cargar datos', 'error');
+            return;
+        }
+        renderCalendar();
+        renderSlots();
+        renderMisCitas();
+        updateCitaActivaBanner();
+    }
+
+    init();
 })();

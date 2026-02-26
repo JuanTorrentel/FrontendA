@@ -56,8 +56,9 @@ function showModal(options) {
     setTimeout(() => overlay.remove(), 300);
   }
 
-  overlay.querySelector('.modal-confirm').addEventListener('click', () => {
-    const result = onConfirm ? onConfirm(overlay) : true;
+  overlay.querySelector('.modal-confirm').addEventListener('click', async () => {
+    if (!onConfirm) { close(); return; }
+    const result = await Promise.resolve(onConfirm(overlay));
     if (result !== false) close();
   });
 
