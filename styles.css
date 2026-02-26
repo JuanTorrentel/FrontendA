@@ -65,6 +65,7 @@
     /* Tipografía */
     --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-logo: 'Outfit', var(--font-heading);
     
     /* Espaciado */
     --spacing-xs: 0.5rem;
@@ -264,10 +265,11 @@ body > * {
 }
 
 .logo-name {
-    font-family: var(--font-heading);
+    font-family: var(--font-logo);
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--color-text);
+    letter-spacing: -0.01em;
 }
 
 .logo-img {
@@ -869,13 +871,18 @@ body > * {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-xl) var(--spacing-xl);
-    align-items: center;
+    align-items: start;
 }
 
 .copytrading-content-group {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xl);
+    align-self: stretch;
+}
+
+.copytrading-layout > .copytrading-block {
+    align-self: stretch;
 }
 
 .copytrading-block {
@@ -1021,6 +1028,9 @@ body > * {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-border);
 }
 
 .copytrading-platform {
@@ -1050,6 +1060,7 @@ body > * {
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
+    align-self: stretch;
 }
 
 .copytrading-result-image img {
