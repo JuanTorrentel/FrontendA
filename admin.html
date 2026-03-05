@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de administración - Yotago School</title>
+    <link rel="icon" type="image/png" href="assets/favicon-ytg-v2.png" sizes="32x32">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -131,7 +132,7 @@
             const result = checkAuth('admin');
             if (!result.allowed) {
                 if (result.msg) showToast(result.msg, 'error');
-                window.location.href = result.redirect || 'login.html';
+                window.location.href = getSafeRedirect(result.redirect);
                 return;
             }
 

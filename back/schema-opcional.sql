@@ -52,3 +52,8 @@ CREATE INDEX IF NOT EXISTS idx_citas_estado ON public.citas(estado);
 CREATE INDEX IF NOT EXISTS idx_citas_email ON public.citas(LOWER(email));
 CREATE INDEX IF NOT EXISTS idx_citas_created_by ON public.citas(created_by_user_id);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email_lower ON public.users(LOWER(email));
+
+-- Campos para recuperación de contraseña por link mágico
+ALTER TABLE public.users
+  ADD COLUMN IF NOT EXISTS password_reset_token TEXT,
+  ADD COLUMN IF NOT EXISTS password_reset_expires_at TIMESTAMPTZ;

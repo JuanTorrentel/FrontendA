@@ -62,11 +62,15 @@ Subir todos los archivos del frontend (excepto `back/`, `node_modules/`, `.env`)
 - `styles.css`, `app.css`
 - `assets/`
 
-### 3. CORS
+### 3. CORS y URLs
 
 En el backend, `FRONT_URL` debe incluir la URL exacta del frontend (con `https://`).
 
-Para varios orígenes: `FRONT_URL=https://app.com,https://www.app.com`
+- **Varios orígenes (CORS):** `FRONT_URL=https://app.com,https://www.app.com` — el backend acepta peticiones de todos. Para el **enlace de verificación** tras el registro se usa solo la primera URL.
+- **Una sola URL:** `FRONT_URL=https://yotago-front.fly.dev`
+- No uses comas ni espacios dentro de una misma URL. Cada origen debe ser una URL completa y válida (`https://dominio.com`).
+
+En el frontend, `API_BASE_URL` debe ser **una sola URL** del API (ej. `https://yotago-api.fly.dev`). Si se define más de una por error, la app usa solo la primera.
 
 ---
 

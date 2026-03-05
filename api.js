@@ -3,7 +3,13 @@
  * Conecta con el backend para auth, citas y schedule
  */
 const API = (function() {
-  const getBase = () => (typeof API_BASE_URL !== 'undefined' ? String(API_BASE_URL).replace(/\/$/, '') : 'http://localhost:3002');
+  /** Siempre devuelve una sola URL base válida (evita listas separadas por comas). */
+  const getBase = () => {
+    let base = typeof API_BASE_URL !== 'undefined' ? String(API_BASE_URL) : 'http://localhost:3002';
+    base = base.split(',')[0].trim();
+    if (base && !/^https?:\/\//i.test(base)) base = 'https://' + base.replace(/^\/*/, '');
+    return (base || 'http://localhost:3002').replace(/\/+$/, '');
+  };
   const getToken = () => sessionStorage.getItem('ytg_token') || localStorage.getItem('ytg_token');
   const getStorage = () => (localStorage.getItem('ytg_remember') ? localStorage : sessionStorage);
 
@@ -36,6 +42,9 @@ const API = (function() {
         request('POST', '/api/auth/register', { nombre, email, celular, password }),
       verify: (token) => request('GET', '/api/auth/verify?token=' + encodeURIComponent(token)),
       me: () => request('GET', '/api/auth/me'),
+      forgotPassword: (email) => request('POST', '/api/auth/forgot-password', { email }),
+      resetPassword: (token, password) =>
+        request('POST', '/api/auth/reset-password', { token, password }),
     },
     citas: {
       list: () => request('GET', '/api/citas'),

@@ -7,7 +7,7 @@
     const result = checkAuth('agenda');
     if (!result.allowed) {
         if (result.msg) showToast(result.msg, 'error');
-        window.location.href = result.redirect || 'login.html';
+        window.location.href = getSafeRedirect(result.redirect);
         return;
     }
 

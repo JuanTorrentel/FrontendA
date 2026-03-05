@@ -128,6 +128,21 @@ async function verifyToken(token) {
   }
 }
 
+/** Rutas relativas permitidas para redirect (evita inyección de URLs externas). */
+const SAFE_REDIRECTS = ['login.html', 'agenda.html', 'admin.html', 'index.html'];
+
+/**
+ * Devuelve una ruta de redirect segura (solo rutas relativas permitidas).
+ * Usar siempre al asignar location.href desde result.redirect.
+ * @param {string} [path]
+ * @returns {string}
+ */
+function getSafeRedirect(path) {
+  if (!path || typeof path !== 'string') return 'login.html';
+  const p = path.trim().split(/[#?]/)[0];
+  return SAFE_REDIRECTS.includes(p) ? p : 'login.html';
+}
+
 /**
  * Comprueba si hay sesión activa
  * @param {string} page - 'login' | 'agenda' | 'admin' | 'verify'

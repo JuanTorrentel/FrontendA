@@ -19,6 +19,8 @@
 | rol | text | DEFAULT 'user' |
 | verified | integer | 0/1 |
 | verification_token | text | Para verificación por email |
+| password_reset_token | text | Token temporal para link mágico de reset |
+| password_reset_expires_at | timestamptz | Expiración del token de reset |
 | created_at | timestamptz | |
 | updated_at | timestamptz | |
 

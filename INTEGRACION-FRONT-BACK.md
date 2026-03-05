@@ -43,7 +43,7 @@
 
 | Dato | Ubicación | Valor actual | Prioridad |
 |------|-----------|--------------|-----------|
-| **Planes** | Sección planes (L332-396) | Básico $75, Pro $350, VIP $550 | Media – `GET /api/planes` |
+| **Planes** | Sección planes (L332-396) | Básico 6m $350, Pro 1a $600, Personalizado 6m $1000 | Media – `GET /api/planes` |
 | **Testimonios** | Sección testimonios (L539-603) | 3 cards hardcodeadas (dolly, Piero, Tony) | Media – `GET /api/testimonios` |
 | Trustpilot | Widget + enlaces | yotagoprofessional.com | Mantener (widget externo) |
 | Email contacto | Footer (L730) | contacto@tradingpro.com | Config – `GET /api/config` o .env |

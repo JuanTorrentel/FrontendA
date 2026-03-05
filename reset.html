@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restablecer contraseña - Yotago School</title>
+    <link rel="icon" type="image/png" href="assets/favicon-ytg-v2.png" sizes="32x32">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body class="app-page">
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo-link">
+                    <img src="assets/logo-ytg.png" alt="Yotago School" class="logo-img" width="168" height="56">
+                    <span class="logo-name">Yotago School</span>
+                </a>
+                <a href="login.html" class="nav-link">Iniciar sesión</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <div class="login-container">
+            <div class="login-card" id="resetCard">
+                <h1 class="login-title">Restablecer contraseña</h1>
+                <p class="login-subtitle">Elige una nueva contraseña para tu cuenta.</p>
+
+                <div id="resetInvalid" style="display: none;">
+                    <p class="login-subtitle">El enlace de restablecimiento no es válido o ha expirado. Vuelve a solicitar uno desde <a href="forgot.html">Recuperar contraseña</a>.</p>
+                </div>
+
+                <form id="resetForm" class="login-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="password" class="form-label">Nueva contraseña *</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Mínimo 6 caracteres" minlength="6" required autocomplete="new-password">
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordConfirm" class="form-label">Confirmar contraseña *</label>
+                        <input type="password" id="passwordConfirm" name="passwordConfirm" class="form-input" placeholder="Repite tu contraseña" minlength="6" required autocomplete="new-password">
+                    </div>
+                    <div id="resetError" class="form-error" role="alert" aria-live="polite"></div>
+                    <button type="submit" class="btn btn-primary btn-large btn-block">Guardar nueva contraseña</button>
+                </form>
+
+                <div id="resetSuccess" style="display: none; text-align: center; margin-top: 1rem;">
+                    <p class="login-subtitle">Tu contraseña se actualizó correctamente. Ya puedes iniciar sesión.</p>
+                    <a href="login.html" class="btn btn-primary btn-large btn-block" style="margin-top: 1.5rem;">Ir a iniciar sesión</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+    <script>
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token') || '';
+
+            const form = document.getElementById('resetForm');
+            const invalidEl = document.getElementById('resetInvalid');
+            const successEl = document.getElementById('resetSuccess');
+            const errorEl = document.getElementById('resetError');
+
+            if (!token) {
+                invalidEl.style.display = 'block';
+                return;
+            }
+
+            form.style.display = 'block';
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                errorEl.textContent = '';
+                errorEl.classList.remove('visible');
+
+                const password = form.password.value;
+                const confirm = form.passwordConfirm.value;
+
+                if (!password || password.length < 6) {
+                    errorEl.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+                    errorEl.classList.add('visible');
+                    return;
+                }
+                if (password !== confirm) {
+                    errorEl.textContent = 'Las contraseñas no coinciden.';
+                    errorEl.classList.add('visible');
+                    return;
+                }
+
+                const btn = form.querySelector('button[type=\"submit\"]');
+                btn.disabled = true;
+
+                try {
+                    const res = await API.auth.resetPassword(token, password);
+                    if (res && res.success) {
+                        form.style.display = 'none';
+                        successEl.style.display = 'block';
+                        if (typeof showToast === 'function') {
+                            showToast('Contraseña actualizada correctamente.', 'success');
+                        }
+                    } else {
+                        errorEl.textContent = res.error || 'Error al restablecer contraseña.';
+                        errorEl.classList.add('visible');
+                    }
+                } catch (err) {
+                    errorEl.textContent = err.data?.error || err.message || 'Error al restablecer contraseña.';
+                    errorEl.classList.add('visible');
+                } finally {
+                    btn.disabled = false;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
+

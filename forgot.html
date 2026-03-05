@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar contraseña - Yotago School</title>
+    <link rel="icon" type="image/png" href="assets/favicon-ytg-v2.png" sizes="32x32">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body class="app-page">
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo-link">
+                    <img src="assets/logo-ytg.png" alt="Yotago School" class="logo-img" width="168" height="56">
+                    <span class="logo-name">Yotago School</span>
+                </a>
+                <a href="login.html" class="nav-link">Iniciar sesión</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <div class="login-container">
+            <div class="login-card">
+                <h1 class="login-title">Recuperar contraseña</h1>
+                <p class="login-subtitle">Te enviaremos un enlace mágico al correo con el que creaste tu cuenta.</p>
+
+                <form id="forgotForm" class="login-form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Correo electrónico *</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="tu@correo.com" autocomplete="email" required>
+                    </div>
+                    <div id="forgotError" class="form-error" role="alert" aria-live="polite"></div>
+                    <button type="submit" class="btn btn-primary btn-large btn-block">Enviar enlace</button>
+                </form>
+
+                <p class="register-login-link" style="margin-top: 1.5rem; text-align: center;">
+                    ¿Ya recuerdas tu contraseña? <a href="login.html">Inicia sesión</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+    <script>
+        (function() {
+            const form = document.getElementById('forgotForm');
+            const errorEl = document.getElementById('forgotError');
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                errorEl.textContent = '';
+                errorEl.classList.remove('visible');
+
+                const email = form.email.value.trim();
+                if (!email) {
+                    errorEl.textContent = 'Ingresa tu correo electrónico.';
+                    errorEl.classList.add('visible');
+                    return;
+                }
+
+                const btn = form.querySelector('button[type=\"submit\"]');
+                btn.disabled = true;
+                try {
+                    await API.auth.forgotPassword(email);
+                    showToast('Si el correo existe y está verificado, te enviaremos un enlace para restablecer la contraseña.', 'success');
+                    form.reset();
+                } catch (err) {
+                    errorEl.textContent = err.data?.error || err.message || 'Error al solicitar restablecimiento.';
+                    errorEl.classList.add('visible');
+                } finally {
+                    btn.disabled = false;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
+

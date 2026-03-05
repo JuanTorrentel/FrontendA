@@ -1,0 +1,11 @@
+# No incluir backend ni config de fly en la imagen del front
+fly.toml
+back/
+.git
+.github
+node_modules
+.env
+.env.*
+*.md
+*.log
+.DS_Store

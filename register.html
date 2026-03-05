@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear cuenta - Yotago School</title>
+    <link rel="icon" type="image/png" href="assets/favicon-ytg-v2.png" sizes="32x32">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -69,7 +70,7 @@
         (function() {
             const result = checkAuth('login');
             if (!result.allowed && result.redirect) {
-                window.location.href = result.redirect;
+                window.location.href = getSafeRedirect(result.redirect);
                 return;
             }
 
@@ -109,8 +110,15 @@
                 btn.disabled = false;
 
                 if (res.success) {
-                    if (res.verifyUrl) {
-                        window.location.href = res.verifyUrl;
+                    const verifyUrl = res.verifyUrl && String(res.verifyUrl).trim();
+                    if (verifyUrl && /^https?:\/\/[^,\s]+$/i.test(verifyUrl)) {
+                        window.location.href = verifyUrl;
+                    } else if (verifyUrl) {
+                        // URL mal formada: ir a verify.html en este mismo sitio con el token si viene en la respuesta
+                        const tokenMatch = verifyUrl.match(/token=([^&\s]+)/);
+                        const go = tokenMatch ? 'verify.html?token=' + encodeURIComponent(tokenMatch[1]) : null;
+                        if (go) window.location.href = go;
+                        else showToast('¡Registro exitoso! Revisa tu correo para verificar tu cuenta.', 'success');
                     } else {
                         showToast('¡Registro exitoso! Revisa tu correo para verificar tu cuenta.', 'success');
                         form.reset();
