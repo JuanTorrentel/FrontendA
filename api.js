@@ -45,6 +45,8 @@ const API = (function() {
       forgotPassword: (email) => request('POST', '/api/auth/forgot-password', { email }),
       resetPassword: (token, password) =>
         request('POST', '/api/auth/reset-password', { token, password }),
+      resendVerification: (email) =>
+        request('POST', '/api/auth/resend-verification', { email }),
     },
     citas: {
       list: () => request('GET', '/api/citas'),

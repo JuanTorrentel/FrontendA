@@ -44,6 +44,9 @@
                         <label for="remember" class="form-check-label">Recordar sesión</label>
                     </div>
                     <div id="loginError" class="form-error" role="alert" aria-live="polite"></div>
+                    <button type="button" id="resendVerifyBtn" class="btn btn-outline btn-small btn-block" style="display: none; margin-top: 0.75rem;">
+                        Reenviar correo de verificación
+                    </button>
                     <button type="submit" class="btn btn-primary btn-large btn-block">Iniciar sesión</button>
                 </form>
 
@@ -71,10 +74,16 @@
 
             const form = document.getElementById('loginForm');
             const errorEl = document.getElementById('loginError');
+            const resendBtn = document.getElementById('resendVerifyBtn');
 
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 errorEl.textContent = '';
+                errorEl.classList.remove('visible');
+                if (resendBtn) {
+                    resendBtn.style.display = 'none';
+                    resendBtn.disabled = false;
+                }
                 const btn = form.querySelector('button[type="submit"]');
                 btn.disabled = true;
 
@@ -86,6 +95,27 @@
                 } else {
                     errorEl.textContent = res.error;
                     errorEl.classList.add('visible');
+                    if (res.error && res.error.indexOf('Cuenta no verificada') === 0 && resendBtn) {
+                        const email = form.email.value.trim();
+                        if (email) {
+                            resendBtn.style.display = 'block';
+                            resendBtn.onclick = async function() {
+                                resendBtn.disabled = true;
+                                try {
+                                    await API.auth.resendVerification(email);
+                                    if (typeof showToast === 'function') {
+                                        showToast('Te hemos enviado de nuevo el correo de verificación.', 'success');
+                                    }
+                                } catch (err) {
+                                    if (typeof showToast === 'function') {
+                                        showToast(err.data?.error || 'No se pudo reenviar el correo de verificación.', 'error');
+                                    }
+                                } finally {
+                                    resendBtn.disabled = false;
+                                }
+                            };
+                        }
+                    }
                 }
             });
         })();

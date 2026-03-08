@@ -180,6 +180,56 @@ router.get('/me', authMiddleware, async (req, res) => {
   }
 });
 
+// POST /api/auth/resend-verification - reenvía correo de verificación si la cuenta no está verificada
+router.post('/resend-verification', async (req, res) => {
+  try {
+    const email = (req.body.email || '').trim().toLowerCase();
+    if (!email) {
+      return res.status(400).json({ error: 'Correo obligatorio' });
+    }
+
+    const r = await pool.query(
+      'SELECT id, email, verified, verification_token FROM users WHERE LOWER(email) = $1',
+      [email]
+    );
+    const user = r.rows[0];
+
+    // No revelamos si el correo existe o está verificado: devolvemos success igual
+    if (!user) {
+      logInfo('resend_verification_non_existing', { email });
+      return res.json({ success: true });
+    }
+    if (user.verified) {
+      logInfo('resend_verification_already_verified', { email, userId: user.id });
+      return res.json({ success: true });
+    }
+
+    let token = user.verification_token;
+    if (!token) {
+      token = 'ytg_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 12);
+      await pool.query(
+        'UPDATE users SET verification_token = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+        [token, user.id]
+      );
+    }
+
+    let frontUrl = (process.env.FRONT_URL || 'http://localhost:5500').split(',')[0].trim();
+    if (!/^https?:\/\//i.test(frontUrl)) {
+      frontUrl = 'https://' + frontUrl.replace(/^\/*/, '');
+    }
+    frontUrl = frontUrl.replace(/\/+$/, '');
+    const verifyUrlFront = frontUrl + '/verify.html?token=' + encodeURIComponent(token);
+
+    await sendVerificationEmail({ to: email, verifyUrl: verifyUrlFront });
+    logInfo('resend_verification_sent', { email, userId: user.id });
+
+    res.json({ success: true });
+  } catch (err) {
+    logError('resend_verification_error', err, { route: 'POST /api/auth/resend-verification' });
+    res.status(500).json({ error: 'Error al reenviar verificación' });
+  }
+});
+
 // POST /api/auth/forgot-password - solicita link mágico para restablecer contraseña
 router.post('/forgot-password', async (req, res) => {
   try {
